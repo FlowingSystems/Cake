@@ -1,2 +1,14 @@
-*.class
-*.log
+# Scala and VS Code .gitignore
+
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.history
+.cache
+.lib/
+
+# For local Flowing Systems libraries
+lib/comp*
