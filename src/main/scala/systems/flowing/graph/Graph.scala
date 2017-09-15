@@ -10,7 +10,6 @@ trait Graph extends Nodes with Storage {
     } flatten) zip (List.fill(size)(0 until size) flatten) toList
     private def connectionsSatisfying(c: Option[Double] => Boolean) = connections filter { case (i, j) => c(this(i, j)) }    
 
-
     /**
     * Adds a new element to the collection of connections
     * 
@@ -18,7 +17,7 @@ trait Graph extends Nodes with Storage {
     */
     // def +=(from: List[Option[Double]])
 
-    def normalizeRow(i: Int): Unit = {
+    def normalizeWeights(i: Int): Unit = {
         val sum = (this(i) map {
             case None => 0.0
             case Some(x) => Math.abs(x)
@@ -30,23 +29,31 @@ trait Graph extends Nodes with Storage {
         }
     }
 
-    def normalize = for (i <- 0 until size) normalizeRow(i)
+    def normalize = for (i <- 0 until size) normalizeWeights(i)
 }
 
-trait Propagate extends Nodes {
-    def pre(): Unit
+trait Flow {
+    this: Graph with IO =>
+
     def node(i: Int): Unit
-    def post: Unit
 
-    def propagate = {
-        pre
-        indices foreach node _
-        post
-    }
+    val input = Some((xs: List[Option[Double]]) => (nodes filter (_.isInstanceOf[Input]) zip xs) foreach { case (node: Input, x: Option[Double]) => node.state = x })
+    val output = Some(() => {
+        indices(!_.isInstanceOf[Input]) foreach node
+        nodes filter (_.isInstanceOf[Output]) map { case node: Output => node.state }
+    })
 }
 
-trait IO extends Nodes {
-    val inputs: () => List[Double]
-    val outputs: List[Double] => Unit
-    def setInputs = nodes filter (_.isInstanceOf[Input]) zip inputs() foreach { case (node: Input, input: Double) => node.state = Some(input) }
+trait Hierarchy {
+    this: Graph with IO =>
+
+    val nodes: List[Node with Row]
+}
+
+trait Forward {
+    this: Hierarchy =>
+}
+
+trait Backward {
+    this: Hierarchy =>
 }

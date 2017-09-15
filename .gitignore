@@ -7,6 +7,7 @@ project/plugins/project/
 .history
 .cache
 .lib/
+Test.scala
 
 # For local Flowing Systems libraries
 lib/graph*
