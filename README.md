@@ -1,9 +1,9 @@
-# Compute
+# Graph
 
-Algorithms and data structures
+Scala DSL for creating graph structures
 
-## Install
+# Install
 
-Include `libraryDependencies += "systems.flowing" % "comp" % "0.1.0-SNAPSHOT" from "http://code.flowing.systems/jar/comp.jar"` in `build.sbt`
+Include `libraryDependencies += "systems.flowing" % "graph" % "0.1.0-SNAPSHOT" from "http://graph.flowing.systems/latest"` in `build.sbt`
 
-Or [download](http://code.flowing.systems/jar/comp.jar) the JAR directly
+Or [download](http://graph.flowing.systems/latest) the JAR directly
