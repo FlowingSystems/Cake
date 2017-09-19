@@ -4,6 +4,10 @@ import scala.collection.mutable.Buffer
 import scala.collection.mutable.ArrayBuffer
 
 object Util {
+    def random(a: Double, b: Double) = Some(a + (b - a)*scala.util.Random.nextDouble)
+
+    def results[T](n: Int, f: ()=>T): List[T] = (0 until n) map { _=>f() } toList
+
     def listToMatrix[T](xs: List[T]): List[List[T]] = {
         val n = math.sqrt(xs length)
         assert(n % 2 == 0, "number of elements must be square (provided: " + xs.length + ")")

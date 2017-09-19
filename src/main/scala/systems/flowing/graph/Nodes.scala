@@ -4,9 +4,16 @@ protected trait Nodes {
     val nodes: List[Node]
     def size: Int = nodes length
     def indices(c: Node => Boolean) = (nodes zip nodes.indices) filter { case (n: Node, i: Int) => c(n) } map { case (n: Node, i: Int) => i }
+    def nodesToString = nodes.mkString(" ")
 }
 
-trait Node
+trait Node {
+    override def toString = {
+        "unimplemented"
+//        if (this.isInstanceOf[State])
+//        if (this.isInstanceOf[Name])
+    }
+}
 
 trait Name {
     this: Node =>
@@ -26,10 +33,16 @@ trait Output extends State {
     this: Node =>
 }
 
-trait Row {
+trait Order {
     this: Node =>
 
-    val row: Int
+    val order: Int
+}
+
+trait Error {
+    this: Node =>
+
+    var error: Option[Double]
 }
 
 object Empty extends Node

@@ -4,51 +4,43 @@ import scala.util.Random
 import scala.collection.mutable.ArrayBuffer
 
 trait IO {
-    val input: Option[List[Option[Double]] => Unit]
-    val output: Option[() => List[Option[Double]]]
+    def input(xs: List[Option[Double]]): Unit
+    def output(): List[Option[Double]]
 
-    private def ei(f: Option[List[Option[Double]] => Unit], xs: List[Option[Double]]) = f match { case Some(f) => f(xs) }
-    private def eo(f: Option[() => List[Option[Double]]]) = f match { case Some(f) => f() }
-
-    def pull: Unit = eo(output)
-    def pull(n: Int): Unit = for (i <- 0 until n) pull
-
-    def >>(to: IO) = {
-        assert(this.output.isDefined)
-        assert(to.input.isDefined)        
-        new {
-            val input = this.input
-            val output = Some(() => {
-                ei(to.input, eo(this.output))
-                if (to.output.isDefined) eo(to.output) else List[Option[Double]]()
-            })
-        } with IO
+    class Connector(from: IO, to: IO) extends IO {
+        def input(xs: List[Option[Double]]) = from.input(xs)
+        def output = {
+            to.input(from.output)
+            to.output
+        }
     }
+
+    def >>(to: IO) = new Connector(this, to)
+}
+
+class Range(from: Double, to: Double) extends IO {
+    def input(xs: List[Option[Double]]) = ()
+    def output = List(Some(from + Random.nextDouble*(to-from)))
 }
 
 object Range {
-    def apply(from: Double, to: Double) = new {
-        val input = None
-        val output = Some(() => List(Some(from + Random.nextDouble*(to-from))))
-    } with IO
+    def apply(from: Double, to: Double) = new Range(from, to)
 }
 
-object Repeat {
-    def apply(n: Int, from: IO) = {
-        var buffer = new ArrayBuffer[Option[Double]]
-        new {
-            val input = None
-            val output = Some(() => {
-                for(i <- 0 until n) buffer.appendAll(from.output.get())
-                val xs = buffer.toList
-                buffer = new ArrayBuffer
-                xs
-            })
-        } with IO
+class Repeat(n: Int, from: IO) extends IO {
+    def input(xs: List[Option[Double]]) = ()
+    def output = {
+        val buffer = new ArrayBuffer[Option[Double]]
+        for(i <- 0 until n) buffer.appendAll(from.output)
+        buffer toList
     }
 }
 
+object Repeat {
+    def apply(n: Int, from: IO) = new Repeat(n, from)
+}
+
 object Print extends IO {
-    val input = Some((xs: List[Option[Double]]) => println(xs))
-    val output = None
+    def input(xs: List[Option[Double]]) = println(xs)
+    def output = List()
 }
