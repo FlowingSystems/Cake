@@ -12,7 +12,9 @@ trait System extends Graph with Flow with IO with Sink {
     nodes foreach (_.state = Util.random(-1, 1).get)
 
     def input(cs: Channels) = {
-        fillInputs(cs("inputs") toList)
+        (nodes filter(_.isInstanceOf[Input]) zip cs("inputValues")) foreach { 
+            case (n: Input, x: Double) => n.state = x
+        }
         process
     }
 

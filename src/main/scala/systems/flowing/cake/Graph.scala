@@ -19,13 +19,6 @@ trait Graph extends Nodes with Store {
 
     def normalize = for (i <- 0 until size) normalizeWeights(i)
 
-    def fillInputs(xs: List[Double]) = {
-        val nodesWithInput = nodes.filter(_.isInstanceOf[Input]) zip xs
-        nodesWithInput foreach {
-            case (node: Input, x: Double) => node.state = x
-        }
-    }
-
     private def connections: List[(Int, Int)] = ((0 until size) map {
         List.fill(size)(_)
     } flatten) zip (List.fill(size)(0 until size) flatten) toList
