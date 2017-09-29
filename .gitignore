@@ -9,4 +9,4 @@ project/plugins/project/
 .lib/
 
 # For local Flowing Systems libraries
-lib/graph*
+lib/datacake*

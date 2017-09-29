@@ -1,9 +1,9 @@
-# Graph
+# Cake
 
-Scala DSL for creating graph structures
+Scala framework for expressing complex data structures
 
 # Install
 
-Include `libraryDependencies += "systems.flowing" % "graph" % "0.1.0-SNAPSHOT" from "http://graph.flowing.systems/latest"` in `build.sbt`
+Include `libraryDependencies += "systems.flowing" % "cake" % "0.1.0-SNAPSHOT" from "http://cake.flowing.systems/latest"` in `build.sbt`
 
-Or [download](http://graph.flowing.systems/latest) the JAR directly
+Or [download](http://cake.flowing.systems/latest) the JAR directly
