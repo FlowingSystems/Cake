@@ -40,10 +40,9 @@ trait BackProp extends Hierarchy with Signal with Feedback with IO {
         backpropagate
     }
 
-    // TODO get[Output]
     def output = Map(
-        "outputs" -> (nodes filter (_.isInstanceOf[Output]) map (_.asInstanceOf[Output].state)),
-        "errors" -> (nodes filter (_.isInstanceOf[Output]) map (_.asInstanceOf[Error].error))
+        "outputs" -> (nodes collect { case n: Output => n.state }),
+        "errors" -> (nodes collect { case n: Error => n.error })
     )
 }
 
