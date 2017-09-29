@@ -26,9 +26,6 @@ trait Graph extends Nodes with Store {
         }
     }
 
-    // TODO use type tags
-    def outputStates = nodes filter (_.isInstanceOf[Output]) map (_.asInstanceOf[Output].state) toList
-
     private def connections: List[(Int, Int)] = ((0 until size) map {
         List.fill(size)(_)
     } flatten) zip (List.fill(size)(0 until size) flatten) toList
