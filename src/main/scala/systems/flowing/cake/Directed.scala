@@ -1,10 +1,12 @@
-package systems.flowing.cake.store
+package systems.flowing.cake
 
 
 /**
+ * Structures that have weighed directed connections between pairs of nodes.
+ *
  * General rule: methods never fail
  */
-trait Store {
+trait Directed {
     /**
      * - None for connections outside of boundaries of the store
      * - None for undefined connections inside the boundaries
@@ -33,6 +35,4 @@ trait Store {
      * - Map() for points without connections
      */
     def to(i: Int): Map[Int, Double]
-
-    def storeToString: String
 }

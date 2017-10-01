@@ -1,11 +1,26 @@
 package systems.flowing.cake.io
 
 trait IO {
+    self =>
     def input(channels: Channels): Unit
     def output(): Channels
 
-    def >>(to: IO) = new Pipe(this, to)
-    def +(b: IO) = new Plus(this, b)
+    def >>(to: IO) = new IO {
+        def input(cs: Channels) = self.input(cs)
+        def output = {
+            to.input(self.output)
+            to.output
+        }
+    }
+    
+    def +(b: IO) = new IO {
+        def input(cs: Channels) = {
+            self.input(cs)
+            b.input(cs)
+        }
+
+        def output = self.output ++ b.output
+    }
 }
 
 trait Source {

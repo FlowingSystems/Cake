@@ -1,6 +1,6 @@
 # Cake
 
-Scala framework for expressing complex data structures
+Scala library for expressing complex data structures
 
 # Install
 

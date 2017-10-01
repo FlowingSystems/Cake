@@ -1,5 +1,7 @@
 package systems.flowing.cake
 
+import nodes._
+
 trait Signal {
     this: Hierarchy =>
 

@@ -5,13 +5,13 @@ import systems.flowing.cake._
 import scala.collection.mutable.ArrayBuffer
 
 trait AdjacencyList {
-    this: Store =>
+    this: Directed =>
 
     val list = ArrayBuffer[collection.mutable.Map[Int, Double]]()
     def apply(i: Int) = list(i) toMap
 
     def update(i: Int, j: Int, weight: Option[Double]): Unit = {
-        for (_ <- 0 until (i - list.length + 1)) list += collection.mutable.Map[Int, Double]()
+        Util.expandTo(list, i, collection.mutable.Map[Int, Double]())
         if (weight.isDefined) list(i)(j) = weight.get
         else list(i).remove(j)
     }
@@ -25,6 +25,4 @@ trait AdjacencyList {
         case None => Double.NaN
         case Some(x) => x
     })
-
-    def storeToString = ???
 }

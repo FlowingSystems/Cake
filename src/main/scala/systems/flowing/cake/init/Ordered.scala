@@ -2,6 +2,7 @@ package systems.flowing.cake.init
 
 import systems.flowing.cake._
 import store._
+import nodes._
 
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.runtime._
@@ -9,11 +10,11 @@ import scala.reflect.runtime.universe._
 
 // TODO implement back
 class OrderedRandom(ns: List[Int], a: Double, b: Double, back: Boolean) extends Initializer {
-    def init(structure: Store with Nodes) = {
+    def init(structure: Directed with Nodes) = {
         var offset = 0
 
         ns zip ns.tail foreach { case (n1, n2) =>
-            for (i <- 0 until n1; j <- 0 until n2) structure(offset+j+n1, offset+i) = Util.random(a, b)
+            for (i <- 0 until n1; j <- 0 until n2) structure(offset+j+n1, offset+i) = Some(Util.random(a, b))
             offset += n1
         }
     }

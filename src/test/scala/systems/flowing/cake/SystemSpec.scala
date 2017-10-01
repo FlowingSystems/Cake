@@ -3,13 +3,14 @@ package systems.flowing.cake
 import init._
 import store._
 import io._
+import nodes._
 
 import org.scalatest._
 
-trait System extends Graph with Flow with IO with Sink {
+trait System extends Nodes with Directed with Flow with IO with Sink {
     type Node = State
 
-    nodes foreach (_.state = Util.random(-1, 1).get)
+    nodes foreach (_.state = Util.random(-1, 1))
 
     def input(cs: Channels) = {
         (nodes filter(_.isInstanceOf[Input]) zip cs("inputValues")) foreach { 
@@ -33,6 +34,7 @@ class SystemSpec extends FlatSpec with Matchers {
                 Unordered.inputs(2) ++
                 Unordered.states(10) ++
                 Unordered.outputs(2)
+
             val init = Unordered.random(-1, 1)
         } with System with AdjacencyMatrix with Init
     }
