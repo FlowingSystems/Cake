@@ -1,14 +1,16 @@
 package systems.flowing.cake
 
-import nodes._
-
 trait Feedback {
-    this: Hierarchy =>
+    this: Nodes[_ <: Order] with Hierarchy =>
 
     /**
      * Same as signal, but indices are in reverse order
      */
     def feedback(i: Int): Unit
 
-    def backpropagate = nodes.sortBy(_.order).indices.reverse map feedback
+    def backpropagate(c: Any=>Boolean) = nodes.zipWithIndex.
+        sortBy(ni => -ni._1.order).
+        filter(ni => c(ni._1)).
+        map(ni => ni._2).
+        foreach(feedback)
 }

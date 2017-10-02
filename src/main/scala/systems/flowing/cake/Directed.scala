@@ -1,18 +1,20 @@
 package systems.flowing.cake
 
-
 /**
  * Structures that have weighed directed connections between pairs of nodes.
  *
  * General rule: methods never fail
  */
+ // TODO Undirected
 trait Directed {
+    this: Nodes[_] =>
+
     /**
      * - None for connections outside of boundaries of the store
      * - None for undefined connections inside the boundaries
      * - Some[Double] for defined connections inside the boundaries
      */
-    def apply(i: Int, j: Int): Option[Double] = apply(i).get(j)
+    def apply(i: Int, j: Int): Option[Double] = apply(j).get(i)
 
     /**
      * Map() for points outside the boundaries
@@ -34,5 +36,18 @@ trait Directed {
      * - Map() for points outside the boundaries
      * - Map() for points without connections
      */
-    def to(i: Int): Map[Int, Double]
+    def from(i: Int): Map[Int, Double]
+
+    /**
+     * Remove all connections
+     */
+    def reset: Unit
+
+    def <=(init: Initializer) = {
+        reset
+        init.initialize(this)
+    }
+    
+    // expose method from self-type
+    def size: Int
 }

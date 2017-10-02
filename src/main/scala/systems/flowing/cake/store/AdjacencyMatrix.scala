@@ -7,7 +7,7 @@ import scala.collection.mutable.ArrayBuffer
 trait AdjacencyMatrix {
     this: Directed =>
     
-    val matrix = new ArrayBuffer[ArrayBuffer[Double]]
+    private var matrix = new ArrayBuffer[ArrayBuffer[Double]]
 
     override def apply(i: Int, j: Int) = 
         if (j >= matrix.length) None
@@ -20,10 +20,10 @@ trait AdjacencyMatrix {
     def apply(i: Int) = if (i < matrix.length) Util.cleanMap(matrix(i)) else Map[Int, Double]()
 
     def update(i: Int, j: Int, weight: Option[Double]) =
-        if (weight.isDefined || (i < matrix.length && j < matrix(i).length)) {
-            Util.expandTo(matrix, i, new ArrayBuffer[Double])
-            Util.expandTo(matrix(i), j, Double.NaN)
-            matrix(i)(j) = if (weight isDefined) weight.get else Double.NaN
+        if (weight.isDefined || (j < matrix.length && i < matrix(j).length)) {
+            Util.expandTo(matrix, j, new ArrayBuffer[Double])
+            Util.expandTo(matrix(j), i, Double.NaN)
+            matrix(j)(i) = if (weight isDefined) weight.get else Double.NaN
         }
 
     def update(i: Int, weights: Map[Int, Double]): Unit = {
@@ -33,5 +33,7 @@ trait AdjacencyMatrix {
         matrix(i) = withMissing
     }
 
-    def to(i: Int) = Util.cleanMap(matrix map { xs: ArrayBuffer[Double] => xs(i) })
+    def from(i: Int) = Util.cleanMap(matrix map { xs: ArrayBuffer[Double] => xs(i) })
+
+    def reset: Unit = new ArrayBuffer[ArrayBuffer[Double]]
 }

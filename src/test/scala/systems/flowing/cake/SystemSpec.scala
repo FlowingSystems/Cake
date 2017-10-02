@@ -1,14 +1,14 @@
 package systems.flowing.cake
 
-import init._
 import store._
 import io._
-import nodes._
 
 import org.scalatest._
 
-trait System extends Nodes with Directed with Flow with IO with Sink {
-    type Node = State
+trait System extends Nodes[State] with Directed with Flow with IO with Sink {
+    // type Node = State
+
+//    val nodes: Seq[_ <: State]
 
     nodes foreach (_.state = Util.random(-1, 1))
 
@@ -31,11 +31,11 @@ class SystemSpec extends FlatSpec with Matchers {
     "System" should "print an output" in {
         val sys = new {
             val nodes =
-                Unordered.inputs(2) ++
-                Unordered.states(10) ++
-                Unordered.outputs(2)
+                Nodes.inputs(2) ++
+                Nodes.states(10) ++
+                Nodes.outputs(2)
+        } with System with AdjacencyMatrix
 
-            val init = Unordered.random(-1, 1)
-        } with System with AdjacencyMatrix with Init
+        sys <= Nodes.random(-1, 1)
     }
 }

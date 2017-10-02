@@ -1,11 +1,11 @@
 package systems.flowing.cake
 
-import nodes._
-
 trait Flow {
-    this: Nodes with Directed =>
+    this: Nodes[_] with Directed =>
 
     def node(i: Int): Unit
 
-    def process = indices(!_.isInstanceOf[Input]) foreach node
+    def process = nodes.zipWithIndex.
+        filter (!_._1.isInstanceOf[Input]).
+        foreach { x => node(x._2) }
 }
