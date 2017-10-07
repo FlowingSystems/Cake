@@ -1,8 +1,10 @@
 package systems.flowing.cake
 
 import scala.collection.mutable.ArrayBuffer
+import scala.reflect.runtime._
+import scala.reflect.runtime.universe._
+import scala.reflect.ClassTag
 
-// TODO neat implicit typeclasses
 /**
  * Structures that contain nodes.
  *
@@ -11,6 +13,9 @@ import scala.collection.mutable.ArrayBuffer
 trait Nodes[N] {
     def nodes: Seq[_ <: N]
     def size: Int = nodes length
+    // TODO memoize access on typetag, clear cache on +=
+    def of[T : ClassTag]: Map[Int, T] =
+        nodes.zipWithIndex collect { case (n: T, i: Int) => (i -> n) } toMap
 }
 
 object Nodes {
@@ -21,15 +26,14 @@ object Nodes {
         }
     }
 
-    // TODO [Node]
-    def inputs(n: Int) = Util.results(n, () => { new Input {} }).toBuffer.asInstanceOf[ArrayBuffer[Input]]
-    def states(n: Int) = Util.results(n, () => { new State {} }).toBuffer.asInstanceOf[ArrayBuffer[State]]
-    def outputs(n: Int) = Util.results(n, () => { new Output {} }).toBuffer.asInstanceOf[ArrayBuffer[Output]]    
+    def nodes[T : TypeTag](fs: (()=>T, Int)*) = fs map { case (create: (()=>T), n: Int) =>
+        Util.results(n, create).toBuffer.asInstanceOf[ArrayBuffer[T]]
+    } flatten
 }
 
-    trait Name {
-        val name: Option[String]
-    }
+trait Name {
+    val name: Option[String]
+}
 
 trait State {
     var state = Double.NaN
@@ -38,7 +42,6 @@ trait State {
 trait Input extends State
 trait Output extends State
 
-// TODO rename Hierarchy
 trait Order {
     val order: Int
 }

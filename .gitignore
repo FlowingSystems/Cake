@@ -1,3 +1,4 @@
+# Scala and VS Code .gitignore
 dist/*
 target/
 lib_managed/
@@ -9,4 +10,4 @@ project/plugins/project/
 .lib/
 
 # For local Flowing Systems libraries
-lib/datacake*
+lib/cake*

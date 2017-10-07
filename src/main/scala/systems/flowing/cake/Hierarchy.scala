@@ -8,7 +8,8 @@ import scala.reflect.runtime.universe._
 
 trait Hierarchy {
     this: Nodes[_ <: Order] =>
-    lazy val order = nodes.map(_.order).max
+    def order(n: Int) = nodes.zipWithIndex collect { case (o: Order, i: Int) if o.order == n => i }
+    lazy val highest = nodes.map(_.order).max
     lazy val lowest = nodes.map(_.order).min
 }
 

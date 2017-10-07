@@ -6,11 +6,10 @@ trait Signal {
     /**
      * Same as Flow.node, but indices are guaranteed to be sorted by order
      */
-    def signal(i: Int): Unit
-
-    def propagate(c: Any=>Boolean) = nodes.zipWithIndex.
-        sortBy(ni => ni._1.order).
-        filter(ni => c(ni._1)).
-        map(ni => ni._2).
-        foreach(signal)
+    def signal(f: Int=>Unit) =
+        nodes.zipWithIndex.
+        filter(!_._1.isInstanceOf[Input]).
+        sortBy(_._1.order).
+        map(_._2).
+        foreach(f)
 }

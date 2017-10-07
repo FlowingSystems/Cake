@@ -8,7 +8,7 @@ trait AdjacencyList {
     this: Directed =>
 
     private var list = ArrayBuffer[collection.mutable.Map[Int, Double]]()
-    def apply(i: Int) = list(i) toMap
+    def apply(i: Int) = if(i < list.length) list(i) toMap else Map[Int, Double]()
 
     def update(i: Int, j: Int, weight: Option[Double]): Unit = {
         Util.expandTo(list, j, collection.mutable.Map[Int, Double]())
@@ -21,10 +21,11 @@ trait AdjacencyList {
         list(i) = collection.mutable.Map(weights.toSeq: _*)
     }
 
-    def from(i: Int) = Util.cleanMap(list.map(_.get(i)).map {
+    def from(i: Int) =
+        Util.cleanMap(list.map(_.get(i)).map {
         case None => Double.NaN
         case Some(x) => x
-    })
+        })
 
     def reset: Unit = list = ArrayBuffer[collection.mutable.Map[Int, Double]]()
 }
