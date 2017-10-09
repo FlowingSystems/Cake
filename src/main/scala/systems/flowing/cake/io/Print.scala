@@ -5,7 +5,7 @@ object Print {
         var i = 1
         
         new IO with Sink {
-            def input(cs: Channels): Unit =
+            def input(cs: Map[String, Seq[Double]]): Unit =
                 if (i == epoch) {
                     cs foreach { case(name: String, values: Seq[Double]) =>
                         println(s"$name:\n ${values.mkString(" ")}\n")

@@ -2,11 +2,11 @@ package systems.flowing.cake.io
 
 trait IO {
     self =>
-    def input(channels: Channels): Unit
-    def output(): Channels
+    def input(channels: Map[String, Seq[Double]]): Unit
+    def output(): Map[String, Seq[Double]]
 
     def >>(to: IO) = new IO {
-        def input(cs: Channels) = self.input(cs)
+        def input(cs: Map[String, Seq[Double]]) = self.input(cs)
         def output = {
             to.input(self.output)
             to.output
@@ -14,7 +14,7 @@ trait IO {
     }
     
     def +(b: IO) = new IO {
-        def input(cs: Channels) = {
+        def input(cs: Map[String, Seq[Double]]) = {
             self.input(cs)
             b.input(cs)
         }
@@ -25,7 +25,7 @@ trait IO {
 
 trait Source {
     this: IO =>
-    def input(cs: Channels) = ()
+    def input(cs: Map[String, Seq[Double]]) = ()
 }
 
 trait Sink {
